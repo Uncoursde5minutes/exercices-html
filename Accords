@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Exercice d'orthographe</title>
+    <style>
+        body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 10px;
+    line-height: 1.6;
+}
+
+textarea {
+    width: 100%; /* Prend toute la largeur disponible */
+    max-width: 100%; /* Limite à la largeur du conteneur */
+    height: 200px; /* Hauteur réduite pour petits écrans */
+    margin-bottom: 20px;
+    font-size: 1em; /* Taille du texte relative pour adaptabilité */
+    line-height: 1.5;
+    resize: vertical; /* Permet à l'utilisateur d'ajuster la hauteur */
+}
+
+button {
+    padding: 10px 20px;
+    font-size: 1em;
+    cursor: pointer;
+    display: block; /* Met le bouton sur une nouvelle ligne */
+    width: auto; /* Taille automatique du bouton */
+    max-width: 100%;
+    margin: 10px auto; /* Centre le bouton horizontalement */
+}
+
+.result {
+    font-weight: bold;
+    margin-top: 20px;
+    word-wrap: break-word; /* Gère les longues chaînes de texte */
+}
+
+.incorrect {
+    color: red;
+    margin-bottom: 10px;
+    font-size: 0.9em; /* Réduit la taille pour mieux s'adapter */
+}    </style>
+</head>
+<body>
+    <h1>Texte à fautes</h1>
+    <p>Corrigez les 10 erreurs dans cet extrait de Thérèse Raquin (Zola, 1868)
+</p>
+    <textarea id="editableText">Ses pensées se déroulaient devant lui en spectacles réel. Les yeux fixé sur l’ombre, il voyait. Lorsqu’au bout de sa course dans les rue, après être entré dans le passage et avoir gravie le petits escalier, il crut apercevoir Thérèse, ardent et pâles, il sauta vivement de son lit, en murmurant : « Il faut que j’y aille, elle m’attend. » Le brusque mouvements qu’il venait de faire chassa l’hallucination : il sentit le froid du carreaux, il eut peur. Il resta un instant immobile, les pieds nus, écoutants.</textarea>
+    <button onclick="validate()">Valider</button>
+    <div class="result" id="result"></div>
+    <script>
+        const correctText = `Ses pensées se déroulaient devant lui en spectacles réels. Les yeux fixés sur l’ombre, il voyait. Lorsqu’au bout de sa course dans les rues, après être entré dans le passage et avoir gravi le petit escalier, il crut apercevoir Thérèse, ardente et pâle, il sauta vivement de son lit, en murmurant : « Il faut que j’y aille, elle m’attend. » Le brusque mouvement qu’il venait de faire chassa l’hallucination : il sentit le froid du carreau, il eut peur. Il resta un instant immobile, les pieds nus, écoutant.`;
+
+        function validate() {
+            const userInput = document.getElementById("editableText").value.trim();
+            const userWords = userInput.split(/\s+/); // Split by spaces or newlines
+            const correctWords = correctText.split(/\s+/); // Split correct text the same way
+
+            let errorCount = 0;
+            let output = "";
+
+            // Compare word by word
+            correctWords.forEach((word, index) => {
+                const userWord = userWords[index] || ""; // Handle missing words
+                if (userWord !== word) {
+                    errorCount++;
+                    output += `<div class="incorrect">Erreur : "${userWord || "(mot manquant)"}" | Correction : "${word}"</div>`;
+                }
+            });
+
+            const resultDiv = document.getElementById("result");
+            const score = Math.max(10 - errorCount, 0); // Score on a scale of 10
+            if (errorCount === 0) {
+                resultDiv.innerHTML = `<p>Bravo, la correction est impeccable ! Score : 10/10</p>`;
+            } else {
+                resultDiv.innerHTML = `<p>Il reste ${errorCount} erreur${errorCount > 1 ? "s" : ""}. Score : ${score}/10</p>${output}`;
+            }
+        }
+    </script>
+</body>
+</html>
